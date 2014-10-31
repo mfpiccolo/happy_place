@@ -1,4 +1,4 @@
-module YourGemsModuleName
+module HappyPlace
   module Controller
     extend ActiveSupport::Concern
 
