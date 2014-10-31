@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = HappyPlace::VERSION
   spec.authors       = ["Mike Piccolo"]
   spec.email         = ["mpiccolo@newleaders.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A happy_place for Rails and JS}
+  spec.description   = %q{Use javascript in rails in a railsy way.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
