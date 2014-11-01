@@ -14,32 +14,31 @@ module HappyPlace
 
     # instance methods to go on every controller go here
     def js(js_class: nil, method: nil, partial: nil)
-        return unless [:js, :html].include?(request.format.to_sym)
+      return unless [:js, :html].include?(request.format.to_sym)
 
-        js_class ||= self.class.name.gsub("::", ".")
-        method ||= action_name
+      js_class ||= self.class.name.gsub("::", ".")
+      method ||= action_name
 
-        if partial.present?
-          appendable = (render_to_string partial: partial).gsub("\n", "")
-          arg = "('#{appendable}');"
-        else
-          arg = "()"
-        end
+      if partial.present?
+        appendable = (render_to_string partial: partial).gsub("\n", "")
+        arg = "('#{appendable}');"
+      else
+        arg = "()"
+      end
 
-        class_method = [js_class, method].join(".")
-        if request.format.to_sym == :js
-          render js: class_method + arg
-        elsif request.format.to_sym == :html
-          render
-          response_body = response.body
-          before_body_end_index = response_body.rindex('</body>')
+      class_method = [js_class, method].join(".")
+      if request.format.to_sym == :js
+        render js: class_method + arg
+      elsif request.format.to_sym == :html
+        render
+        response_body = response.body
+        before_body_end_index = response_body.rindex('</body>')
 
-          if before_body_end_index.present?
-            before_body = response_body[0, before_body_end_index].html_safe
-            after_body = response_body[before_body_end_index..-1].html_safe
+        if before_body_end_index.present?
+          before_body = response_body[0, before_body_end_index].html_safe
+          after_body = response_body[before_body_end_index..-1].html_safe
 
-            response.body = before_body + clean_script(class_method, arg).html_safe + after_body
-          end
+          response.body = before_body + clean_script(class_method, arg).html_safe + after_body
         end
       end
     end
