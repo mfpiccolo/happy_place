@@ -1,3 +1,5 @@
+require "happy_place/controller"
+
 module HappyPlace
   class Railtie < Rails::Railtie
     initializer "your_gem_name.action_controller" do
