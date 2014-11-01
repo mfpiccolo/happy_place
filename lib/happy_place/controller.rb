@@ -13,22 +13,22 @@ module HappyPlace
     # end
 
     # instance methods to go on every controller go here
-    def js(js_class: nil, method: nil, partial: nil)
+    def js(js_class: nil, function: nil, partial: nil, args: {})
       return unless [:js, :html].include?(request.format.to_sym)
 
       js_class ||= self.class.name.gsub("::", ".")
-      method ||= action_name
+      function ||= action_name
 
       if partial.present?
         appendable = (render_to_string partial: partial).gsub("\n", "")
-        arg = "('#{appendable}');"
+        built_args = "({" + (["partial: '#{appendable}'"] + hash_to_js_args(args)).join(", ") + "});"
       else
-        arg = "()"
+        built_args = "({" + hash_to_js_args(args).join(", ") + "});"
       end
 
-      class_method = [js_class, method].join(".")
+      class_function = [js_class, function].join(".")
       if request.format.to_sym == :js
-        render js: class_method + arg
+        render js: class_function + built_args
       elsif request.format.to_sym == :html
         render
         response_body = response.body
@@ -38,13 +38,22 @@ module HappyPlace
           before_body = response_body[0, before_body_end_index].html_safe
           after_body = response_body[before_body_end_index..-1].html_safe
 
-          response.body = before_body + clean_script(class_method, arg).html_safe + after_body
+          response.body = before_body + clean_script(class_function, built_args).html_safe + after_body
         end
       end
     end
 
-    def clean_script(class_method, arg)
-      "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_method + arg) + "});</script>"
+    def clean_script(class_function, args)
+      "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_function + args) + "});</script>"
+    end
+
+    def hash_to_js_args(args)
+      js_args = []
+
+      args.each_pair do |k, v|
+        js_args << (k.to_s + ": " + v.to_s)
+      end
+      js_args
     end
 
   end
