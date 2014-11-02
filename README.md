@@ -42,7 +42,7 @@ The `js` method accepts the following keyword arguments:
 
 `js_class:` String name of the js class that you want to use
 
-`function:` Sting of the name of the function you would like to call
+`function:` String of the name of the function you would like to call
 
 `partials:` Hash of keyword arguments with partials that will be rendered and available in your js function
 
@@ -113,7 +113,7 @@ class this.ExampleController
 
 If your controller action is only ever going to be hit by one format type or you want the same js to run for both html or js formats then you don't need the responds to and you can use the js method directly in the action definition.
 
-Also if you do not need to pass along args or a partial then you can simply call js
+Also if you do not need to pass along args or a partial then you can simply call js.
 
 ```ruby
 class ExampleContorller
@@ -135,7 +135,7 @@ class this.ExampleController
 ## Naming and Directory Structure
 Technically you can put your code anywhere you want but to make it to your happy place you should follow the naming and directory structure used by rails.
 
-If you are adding code that is conroller and action specific, then add a directory called controllers in your `app/assets/javascripts` directory.  If your controllers are namespaced then namespace them just like you do in your rails controllers.  Here is an example of a namespaced coffee class:
+If you are adding code that is controller and action specific, then add a directory called controllers in your `app/assets/javascripts` directory.  If your controllers are namespaced then namespace them just like you do in your rails controllers.  Here is an example of a namespaced coffee class:
 
 ```coffeescript
 # app/assets/javascripts/controllers/admin/special/orders_controller
@@ -169,7 +169,7 @@ Or require them explicitly:
 
 ### Stop using js views after remote actions!
 
-Lets say you have a blog where you can see a list of posts. (Imagine that!)  You use the Posts#index to display this and it is loaded noramally with :html.
+Lets say you have a blog where you can see a list of posts (Imagine that!).  You use the Posts#index to display this and it is loaded noramally with :html.
 
 ```html
 <!-- posts/index.html.erb -->
@@ -206,16 +206,16 @@ Lets say you have a blog where you can see a list of posts. (Imagine that!)  You
 </table>
 ```
 
-However you want to be able to updat the posts table with a filter that uses ajax.  Normally, you would create view of `views/posts/index.coffee` with the following code:
+However you want to be able to update the posts table with a filter that uses ajax.  Normally, you would create view of `views/posts/index.coffee` with the following code:
 
 ```coffee
 # views/posts/index.coffee
 $(".posts-table).html("""<%=j render(partial: "/posts_table", posts: @posts ) %>""");
 ```
 
-I really do not like this patern.  This leaves your you javascript spread out all over your application and it is hard to keep track your apps workflow.
+I really do not like this patern.  This leaves your javascript spread out all over your application and it is hard to keep track your apps workflow.
 
-Here is my happy place for this
+Here is my happy place for this:
 
 Step 1.  Add the gem to gemfile and bundle
 
@@ -234,7 +234,7 @@ class PostsController
 end
 ```
 
-Step 3.  in `app/assets/javascripts/controllers/posts_controller.coffee`
+Step 3.  in `app/assets/javascripts/controllers/posts_controller.coffee`.
 
 ```ruby
 class this.PostsController
@@ -251,6 +251,18 @@ Step 4.  Add `assets/controllers` to your manifest application.js
 ```
 
 Step 5.  Rejoice!
+
+## Change!
+
+![alt text](http://www.quickmeme.com/img/01/014e589af009a1b458ee234119a6c5478e52365976f85ba3590552e44f04fc81.jpg "Stewie dosn't like change")
+
+I expect many rails developers will not be so keen to jump on board.  Some will have legitimate reasons.  If you have a legitimate reason or think that this pattern could be improved upon, open an issue and I would love to get a discussion going,  but lets try to not be like Stewie Griffin and fear change and be more like Winston Churchill.
+
+"To improve is to change; to be perfect is to change often." - Winston Churchill
+
+## Shout-out
+
+I started building this gem and part way though found the [paloma gem](http://www.github.com/kbparagua/paloma). Paloma is a cool implemention that is similar to happy_place.  I leaned on palomas source code during development of happy_place so I thought it would be appropriate to shout out to [@kbparagua](https://github.com/kbparagua).
 
 ## Donating
 Support this project and [others by mfpiccolo][gittip-mfpiccolo] via [gittip][gittip-mfpiccolo].
