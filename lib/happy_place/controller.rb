@@ -14,11 +14,30 @@ module HappyPlace
 
     # instance methods to go on every controller go here
     def js(js_class: nil, function: nil, partials: {}, args: {})
-      return unless [:js, :html].include?(request.format.to_sym)
+      class_and_function = build_class_and_function(js_class, function)
+      built_args = build_args(partials, args)
+      case request.format.to_sym
+      when :js
+        render js: class_and_function + built_args
+      when :html
+        render
+        response_body = response.body
+        before_body_end_index = response_body.rindex('</body>')
 
+        before_body = response_body[0, before_body_end_index].html_safe
+        after_body = response_body[before_body_end_index..-1].html_safe
+
+        response.body = before_body + auto_exec_function(class_and_function, built_args).html_safe + after_body
+      end
+    end
+
+    def build_class_and_function(js_class, function)
       js_class ||= self.class.name.gsub("::", ".")
       function ||= action_name
+      [js_class, function].join(".")
+    end
 
+    def build_args(partials, args)
       if partials.present?
         built_args = "({" +
           (build_partials_string(partials) + hash_to_js_args(args)).join(", ") +
@@ -26,26 +45,10 @@ module HappyPlace
       else
         built_args = "({" + hash_to_js_args(args).join(", ") + "});"
       end
-
-      class_function = [js_class, function].join(".")
-      if request.format.to_sym == :js
-        render js: class_function + built_args
-      elsif request.format.to_sym == :html
-        render
-        response_body = response.body
-        before_body_end_index = response_body.rindex('</body>')
-
-        if before_body_end_index.present?
-          before_body = response_body[0, before_body_end_index].html_safe
-          after_body = response_body[before_body_end_index..-1].html_safe
-
-          response.body = before_body + clean_script(class_function, built_args).html_safe + after_body
-        end
-      end
     end
 
-    def clean_script(class_function, args)
-      "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_function + args) + "});</script>"
+    def auto_exec_function(class_and_function, args)
+      "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_and_function + args) + "});</script>"
     end
 
     def hash_to_js_args(args)
