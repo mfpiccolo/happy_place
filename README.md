@@ -34,15 +34,19 @@ Or install it yourself as:
     $ gem install happy_place
 
 ## Features
-happy_place adds a js method to your controller.  This method accepts the following keyword arguments:
+happy_place adds a js method to your controller.
 
-`js_class:` String name of the js class that you want to user
+It is important to note that this is not a breaking change to your controller.  All controllers should work normally when adding this gem.  This will allow you to test out happy place and see if you like it without breaking the rest of your app and if you do like it you can gradually make the changes to using the js method for all your js needs.
+
+The `js` method accepts the following keyword arguments:
+
+`js_class:` String name of the js class that you want to use
 
 `function:` Sting of the name of the function you would like to call
 
-`partial:` String of the partial name and path that you would like to render
+`partials:` Hash of keyword arguments with partials that will be rendered and available in your js function
 
-`args:` Hash of arguments that you would like to be available in your js function
+`args:` Hash of keyword arguments that you would like to be available in your js function
 
 Both partial and keys passed from args will be available in your js function by accessing the object passed in.
 
@@ -55,7 +59,7 @@ class ExampleContorller
       format.js {
         js(js_class: "ExampleClass",
            function: "doSomething",
-           partial:  "some_partial",
+           partials: {some_partial: "some_partial"},
            args:     {first_id: @examples.first.id}
         )
       }
@@ -70,7 +74,7 @@ class this.ExampleClass
   constructor: ->
 
   @doSomething: (args) ->
-    html_to_append = args.partial
+    html_to_append = args.some_partial
     first_id = args.first_id
     alert(html_to_append)
     alert(first_id)
@@ -86,7 +90,7 @@ class ExampleContorller
     respond_to do |format|
       format.js {
         js(
-           partial:  "some_partial",
+           partials:  {some_partial: "some_partial"},
            args:     {first_id: @examples.first.id}
         )
       }
@@ -125,7 +129,7 @@ class this.ExampleController
   constructor: ->
 
   @index: ->
-    alert "Huzza!)
+    alert "Huzza!"
 ```
 
 ## Naming and Directory Structure
@@ -223,7 +227,7 @@ class PostsController
     @posts = Posts.all
 
     respond_to do |format|
-      format.js { js partial: "posts" }
+      format.js { js partials: {posts: "posts"} }
       format.html
     end
   end
@@ -237,7 +241,7 @@ class this.PostsController
   constructor: ->
 
   @index: (args) ->
-    $(".posts_table").html(args.partial);
+    $(".posts_table").html(args.posts);
 ```
 
 Step 4.  Add `assets/controllers` to your manifest application.js
