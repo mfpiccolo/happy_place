@@ -6,7 +6,4 @@ before_install:
   - gem install bundler -v '= 1.7.4'
 
 script:
-  - cd spec/dummy/
-  - bundle exec rake db:test:prepare
-  - cd ../..
   - bundle exec rspec
