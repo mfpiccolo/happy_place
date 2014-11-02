@@ -7,7 +7,7 @@ happy_place
 | Version                 |  [![Gem Version](https://badge.fury.io/rb/happy_place.png)](http://badge.fury.io/rb/happy_place) |
 | Continuous Integration  |  [![Build Status](https://travis-ci.org/mfpiccolo/happy_place.png?branch=master)](https://travis-ci.org/mfpiccolo/happy_place)
 | Test Coverage           |  [![Coverage Status](https://coveralls.io/repos/mfpiccolo/happy_place/badge.png?branch=master)](https://coveralls.io/r/mfpiccolo/happy_place?branch=coveralls)
-| Grade                   |  [![Code Climate](https://codeclimate.com/github/mfpiccolo/happy_place.png)](https://codeclimate.com/github/mfpiccolo/happy_place)
+| Grade                   |  [![Code Climate](https://codeclimate.com/github/mfpiccolo/happy_place/badges/gpa.svg)](https://codeclimate.com/github/mfpiccolo/happy_place)
 | Dependencies            |  [![Dependency Status](https://gemnasium.com/mfpiccolo/happy_place.png)](https://gemnasium.com/mfpiccolo/happy_place)
 | Homepage                |  [http://mfpiccolo.github.io/happy_place][homepage] |
 | Documentation           |  [http://rdoc.info/github/mfpiccolo/happy_place/frames][documentation] |
