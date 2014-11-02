@@ -13,15 +13,16 @@ module HappyPlace
     # end
 
     # instance methods to go on every controller go here
-    def js(js_class: nil, function: nil, partial: nil, args: {})
+    def js(js_class: nil, function: nil, partials: {}, args: {})
       return unless [:js, :html].include?(request.format.to_sym)
 
       js_class ||= self.class.name.gsub("::", ".")
       function ||= action_name
 
-      if partial.present?
-        appendable = (render_to_string partial: partial).gsub("\n", "")
-        built_args = "({" + (["partial: '#{appendable}'"] + hash_to_js_args(args)).join(", ") + "});"
+      if partials.present?
+        built_args = "({" +
+          (build_partials_string(partials) + hash_to_js_args(args)).join(", ") +
+          "});"
       else
         built_args = "({" + hash_to_js_args(args).join(", ") + "});"
       end
@@ -54,6 +55,14 @@ module HappyPlace
         js_args << (k.to_s + ": " + v.to_s)
       end
       js_args
+    end
+
+    def build_partials_string(partials)
+      partials_strings = []
+      partials.each_pair do |k, v|
+        partials_strings << (k.to_s + ": " + "'#{(render_to_string partial: v).gsub("\n", "")}'")
+      end
+      partials_strings
     end
 
   end
