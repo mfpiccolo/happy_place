@@ -33,6 +33,10 @@ Or install it yourself as:
 
     $ gem install happy_place
 
+## Demo
+
+If you would like to see happy_place in action check out [happy-place-demo](https://happy-place-demo.herokuapp.com/dashboard).
+
 ## Features
 happy_place adds a js method to your controller.
 
