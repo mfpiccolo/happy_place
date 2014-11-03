@@ -55,7 +55,7 @@ module HappyPlace
       js_args = []
 
       args.each_pair do |k, v|
-        js_args << (k.to_s + ": " + v.to_s)
+        js_args << (k.to_s + ": " + "'#{v}'")
       end
       js_args
     end
