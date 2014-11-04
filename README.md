@@ -173,7 +173,7 @@ Or require them explicitly:
 
 ### Stop using js views after remote actions!
 
-Lets say you have a blog where you can see a list of posts (Imagine that!).  You use the Posts#index to display this and it is loaded noramally with :html.
+Let's say you have a blog where you can see a list of posts (Imagine that!).  You use the Posts#index to display this and it is loaded normally with :html.
 
 ```html
 <!-- posts/index.html.erb -->
