@@ -13,21 +13,26 @@ module HappyPlace
     # end
 
     # instance methods to go on every controller go here
-    def js(js_class: nil, function: nil, partials: {}, args: {})
+    def js(js_class: nil, function: nil, partials: {}, args: {}, container: {}, rendered: false)
       class_and_function = build_class_and_function(js_class, function)
       built_args = build_args(partials, args)
       case request.format.to_sym
       when :js
         render js: class_and_function + built_args
       when :html
-        render
+        render unless rendered
+
         response_body = response.body
-        before_body_end_index = response_body.rindex('</body>')
+        if response_body.present?
+          before_body_end_index = response_body.rindex('</body>')
 
-        before_body = response_body[0, before_body_end_index].html_safe
-        after_body = response_body[before_body_end_index..-1].html_safe
+          before_body = response_body[0, before_body_end_index].html_safe
+          after_body = response_body[before_body_end_index..-1].html_safe
 
-        response.body = before_body + auto_exec_function(class_and_function, built_args).html_safe + after_body
+          response.body = before_body + auto_exec_function(class_and_function, built_args).html_safe + after_body
+        else
+          response.body = auto_exec_function(class_and_function, built_args.gsub("\n", ""), container).html_safe
+        end
       end
     end
 
@@ -47,8 +52,12 @@ module HappyPlace
       end
     end
 
-    def auto_exec_function(class_and_function, args)
-      "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_and_function + args) + "});</script>"
+    def auto_exec_function(class_and_function, args, container)
+      script_string = "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_and_function + args) + "});</script>"
+      if container.present?
+        script_string = container[:open] + script_string + container[:close]
+      end
+      script_string
     end
 
     def hash_to_js_args(args)
