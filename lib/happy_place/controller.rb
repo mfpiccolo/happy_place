@@ -48,12 +48,12 @@ module HappyPlace
           (build_partials_string(partials) + hash_to_js_args(args)).join(", ") +
           "});"
       else
-        built_args = "({" + hash_to_js_args(args).join(", ") + "});"
+        built_args = "(" + hash_to_js_args(args) + ");"
       end
     end
 
-    def auto_exec_function(class_and_function, args, container)
-      script_string = "<script type='application/javascript'>jQuery(document).ready(function($) {" + render_to_string(js: class_and_function + args) + "});</script>"
+    def auto_exec_function(class_and_function, args, container=nil)
+      script_string = "<script type='application/javascript'>(function(){" + render_to_string(js: class_and_function + args) + "})();</script>"
       if container.present?
         script_string = container[:open] + script_string + container[:close]
       end
@@ -61,12 +61,13 @@ module HappyPlace
     end
 
     def hash_to_js_args(args)
-      js_args = []
+      # js_args = []
 
-      args.each_pair do |k, v|
-        js_args << (k.to_s + ": " + "'#{v}'")
-      end
-      js_args
+      # args.each_pair do |k, v|
+      #   js_args << (k.to_s + ": " + "'#{v}'")
+      # end
+      # js_args
+      args.to_json
     end
 
     def build_partials_string(partials)
